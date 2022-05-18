@@ -48,7 +48,11 @@
             <artifactId>mybatis</artifactId>
             <version>3.5.1</version>
         </dependency>
-
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-all</artifactId>
+            <version>4.1.75.Final</version>
+        </dependency>
         <dependency>
             <groupId>org.mybatis</groupId>
             <artifactId>mybatis-spring</artifactId>
@@ -80,9 +84,14 @@
         </dependency>
 
         <dependency>
-            <groupId></groupId>
-            <artifactId></artifactId>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>1.2.76</version>
         </dependency>
+
+
+
+
     </dependencies>
 
 </project>

@@ -1,15 +1,9 @@
-import JDK8.map.Parent;
 
-import java.util.Arrays;
+public class Child {
 
-public class Child extends Parent {
+    private String name;
 
-    public static void main(String[] args) {
-        Parent.haha();
-        Child.haha();
+    private int age;
 
-
-
-    }
 
 }

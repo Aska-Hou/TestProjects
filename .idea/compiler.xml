@@ -8,10 +8,12 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="AOPTest" />
+        <module name="NettyTest" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="AOPTest" target="13" />
+      <module name="NettyTest" target="8" />
     </bytecodeTargetLevel>
   </component>
 </project>
