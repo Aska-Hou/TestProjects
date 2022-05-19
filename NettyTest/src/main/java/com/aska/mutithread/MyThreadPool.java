@@ -1,5 +1,7 @@
 package com.aska.mutithread;
 
+import io.netty.util.concurrent.DefaultThreadFactory;
+
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -60,7 +62,20 @@ public class MyThreadPool<T extends Runnable> {
 
     }
 
+    public synchronized void shutDownThreadPool(){
+        workerThreads.stream().forEach((workerThread -> {
+            workerThread.setRunning(false);
+        }));
+        notifyAll();
+    }
+
     class WorkerThread implements Runnable{
+
+        private volatile boolean running = true;
+
+        public void setRunning(boolean running) {
+            this.running = running;
+        }
 
         private int index;
 
@@ -74,22 +89,30 @@ public class MyThreadPool<T extends Runnable> {
 
         @Override
         public void run() {
-            T task = null;
-            // 获取大锁 锁整个threadLocal 即每次只有一个线程可以从threadLocal中拿任务 防止任务重复分配
-            synchronized (MyThreadPool.this) {
-                // 把任务分出去给每一个线程 分配过程加锁 线程独有
-                while (tasks.isEmpty()){
-                    try {
-                        MyThreadPool.this.wait();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-                task = tasks.removeFirst();
-            }
+            // Thread 什么时候死
+            while (true) {
+                T task = null;
+                // 获取大锁 锁整个threadLocal 即每次只有一个线程可以从threadLocal中拿任务 防止任务重复分配
+                synchronized (MyThreadPool.this) {
+                    // 把任务分出去给每一个线程 分配过程加锁 线程独有
+                    while (tasks.isEmpty()) {
+                        // 被shutdown worker直接结束
+                        if (!running) {
+                            return;
+                        }
 
-            if (task != null) {
-                task.run();
+                        try {
+                            MyThreadPool.this.wait();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    task = tasks.removeFirst();
+                }
+
+                if (task != null) {
+                    task.run();
+                }
             }
 
         }

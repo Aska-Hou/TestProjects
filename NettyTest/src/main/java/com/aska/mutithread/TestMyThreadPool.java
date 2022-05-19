@@ -12,6 +12,8 @@ public class TestMyThreadPool {
         myThreadPool.execute(new Task1());
         myThreadPool.execute(new Task2());
 
+        myThreadPool.shutDownThreadPool();
+
     }
 
 
