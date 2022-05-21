@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.locks.AbstractQueuedSynchronizer;
 import java.util.stream.Stream;
 
 /**
@@ -111,9 +112,14 @@ public class MyThreadPool<T extends Runnable> {
                 }
 
                 if (task != null) {
-                    task.run();
+                    try {
+                        task.run();
+                    } catch (Exception exception){
+                        System.out.println("忽略所有Job运行时产生的异常，防止job异常导致线程池中的worker线程中断");
+                    }
                 }
             }
+
 
         }
 
